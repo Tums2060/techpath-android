@@ -1,0 +1,27 @@
+# Build output
+build/
+.gradle/
+.kotlin/
+*.apk
+*.aab
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Secrets: never commit API keys
+local.properties
+*.env
+.env
+secrets.properties
+*.keystore
+*.jks
+
+# Python
+__pycache__/
+*.pyc
+.venv/

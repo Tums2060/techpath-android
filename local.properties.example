@@ -1,0 +1,7 @@
+# Copy to local.properties (git-ignored). Android Studio fills sdk.dir for you.
+sdk.dir=/path/to/Android/Sdk
+
+# Optional: bake a Gemini API key into *debug* builds so you don't have to type it
+# in Settings. Get a free key at https://aistudio.google.com/apikey
+# Leave empty to enter the key in the app instead (recommended for shared phones).
+GEMINI_API_KEY=

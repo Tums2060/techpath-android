@@ -1,0 +1,16 @@
+0 load raw                                    10634 ->  10634  93 paths
+1 drop exact duplicate rows                   10634 ->  10634  
+2 drop missing node_id                        10634 ->  10625  
+3 drop roadmap index pages                    10625 ->  10625  
+4 drop duplicate (path,node_id)               10625 ->  10564  
+5 drop alias paths                            10564 ->  10435  {'r-programming': 'r'}
+6 drop empty title/description                10435 ->  10405  
+7 parse resources                             10405 ->  10405  
+
+paths=91 nodes=10405 core=839 resources=23725 nodes_without_resources=1014
+embedding=hash:hash-tfidf-v1 dims=512
+asset careers.json             0.15 MB
+asset nodes.json              23.47 MB
+asset opportunities.json       0.04 MB
+asset hash_lexicon.json        0.00 MB
+asset total                   23.66 MB
