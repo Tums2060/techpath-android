@@ -5,12 +5,14 @@
 4 drop duplicate (path,node_id)               10625 ->  10564  
 5 drop alias paths                            10564 ->  10435  {'r-programming': 'r'}
 6 drop empty title/description                10435 ->  10405  
-7 parse resources                             10405 ->  10405  
+7 drop duplicate descriptions in a path       10405 ->  10321  
+8 retitle mislabelled duplicates from slug       83 rows  (144 same-title rows remain)
+9 parse resources                             10321 ->  10321  
 
-paths=91 nodes=10405 core=839 resources=23725 nodes_without_resources=1014
+paths=91 nodes=10321 core=838 resources=23549 nodes_without_resources=1003
 embedding=hash:hash-tfidf-v1 dims=512
 asset careers.json             0.15 MB
-asset nodes.json              23.47 MB
+asset nodes.json              23.28 MB
 asset opportunities.json       0.04 MB
 asset hash_lexicon.json        0.00 MB
-asset total                   23.66 MB
+asset total                   23.47 MB

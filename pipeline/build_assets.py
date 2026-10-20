@@ -133,12 +133,36 @@ def load_and_clean(csv: Path) -> pd.DataFrame:
     df["description"] = df["description"].map(clean_text)
     n = len(df); df = df[(df.title != "") & (df.description != "")]
     step("6 drop empty title/description", n, len(df))
-    df["topic_slug"] = df["topic_slug"].fillna(
-        df["title"].str.lower().str.replace(r"[^a-z0-9]+", "-", regex=True).str.strip("-"))
-    step("7 parse resources", len(df), len(df))
+    slugify = lambda t: re.sub(r"[^a-z0-9]+", "-", str(t).lower()).strip("-")
+    df["topic_slug"] = df["topic_slug"].fillna(df["title"].map(slugify))
+    df = fix_duplicate_titles(df, slugify)
+    step("9 parse resources", len(df), len(df))
     for c in RES_COLS:
         df[c] = df[c].map(lambda cell, k=RES_TYPE[c]: parse_resources(cell, k))
     return df.reset_index(drop=True)
+
+
+def fix_duplicate_titles(df: pd.DataFrame, slugify) -> pd.DataFrame:
+    """Repeated titles within a path are mostly scrape mislabels (e.g. slug
+    'basics-of-oop' titled 'Basics of Kotlin'). Drop exact duplicates of the
+    description; for the rest, rows whose slug does not match their title take a
+    title derived from the slug."""
+    n = len(df)
+    df = df.drop_duplicates(subset=["career_path", "description"], keep="first").copy()
+    step("7 drop duplicate descriptions in a path", n, len(df))
+    key = df.career_path + "|" + df.title.str.lower()
+    dup = key.duplicated(keep=False)
+    mismatch = dup & (df.title.map(slugify) != df.topic_slug.str.replace(r"@.*$", "", regex=True))
+    def from_slug(slug):
+        words = re.sub(r"@.*$", "", slug).replace("-", " ").split()
+        small = {"of", "and", "the", "for", "to", "in", "on", "a", "an", "vs", "or", "with"}
+        return " ".join(w if (i and w in small) else w.upper() if len(w) <= 3 and w not in small else w.capitalize()
+                        for i, w in enumerate(words))
+    df.loc[mismatch, "title"] = df.loc[mismatch, "topic_slug"].map(from_slug)
+    left = (df.career_path + "|" + df.title.str.lower()).duplicated().sum()
+    log.append(f"{'8 retitle mislabelled duplicates from slug':<44} {int(mismatch.sum()):>6} rows  ({left} same-title rows remain)")
+    print(log[-1])
+    return df
 
 
 def main():
