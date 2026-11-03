@@ -14,7 +14,7 @@ val geminiKey: String = localProps.getProperty("GEMINI_API_KEY", "")
 
 android {
     namespace = "com.techpath"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.techpath"
