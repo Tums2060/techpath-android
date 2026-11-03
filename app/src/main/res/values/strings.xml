@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TechPath</string>
+
+    <!-- Tabs -->
+    <string name="tab_roadmap">Roadmap</string>
+    <string name="tab_opportunities">Opportunities</string>
+    <string name="tab_hub">Hub</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Back</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_save">Save</string>
+    <string name="action_unsave">Remove from saved</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_open_link">Open link</string>
+    <string name="action_change_path">Change path</string>
+    <string name="action_choose_path">Choose a path</string>
+    <string name="action_regenerate">Regenerate</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_reset_progress">Reset progress</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome">Welcome to TechPath</string>
+    <string name="onboarding_year_question">Which year of study are you in?</string>
+    <string name="onboarding_path_question">Choose a career path</string>
+    <string name="onboarding_skills_question">Skills you already know</string>
+    <string name="onboarding_skills_hint">Optional. Ticked skills show as done on your roadmap.</string>
+    <string name="year_format">Year %1$d</string>
+    <string name="search_paths">Search paths</string>
+    <string name="search_skills">Search skills</string>
+    <string name="paths_roles">Roles</string>
+    <string name="paths_skills">Skills</string>
+    <string name="path_beginner_format">%1$s · Beginner</string>
+    <string name="path_skill_count">%1$d skills</string>
+
+    <!-- Roadmap -->
+    <string name="stage_default_title">Stage %1$d</string>
+    <string name="stage_count_format">%1$d of %2$d done</string>
+    <string name="progress_format">%1$d of %2$d skills done</string>
+    <string name="skill_already_known">Already known</string>
+    <string name="notice_ai_fallback">AI is unavailable, so this is the standard roadmap.</string>
+
+    <!-- Skill detail -->
+    <string name="skill_about">About this skill</string>
+    <string name="skill_learn_more">Learn more</string>
+    <string name="notice_ai_fallback_explanation">AI is unavailable, so this is the standard description.</string>
+    <string name="link_type_article">Article</string>
+    <string name="link_type_docs">Official docs</string>
+    <string name="link_type_video">Video</string>
+    <string name="link_type_opensource">Open source</string>
+    <string name="link_type_course">Course</string>
+
+    <!-- Opportunities -->
+    <string name="filter_all">All</string>
+    <string name="type_internship">Internship</string>
+    <string name="type_attachment">Attachment</string>
+    <string name="type_job">Entry-level job</string>
+    <string name="type_hackathon">Hackathon</string>
+    <string name="status_saved">Saved</string>
+    <string name="status_applied">Applied</string>
+    <string name="status_interview">Interview</string>
+    <string name="status_offer">Offer</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="opportunity_meta_format">%1$s · %2$s</string>
+    <string name="opportunity_deadline_format">Deadline: %1$s</string>
+    <string name="opportunity_closed_format">Closed: %1$s</string>
+
+    <!-- Hub -->
+    <string name="hub_intro">Guides to help you prepare for internships, attachments and your first job.</string>
+    <string name="hub_all_guides">All guides</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_year">Year of study</string>
+    <string name="settings_path">Career path</string>
+    <string name="settings_no_path">No path chosen</string>
+    <string name="settings_study_mode">Study mode</string>
+    <string name="mode_ai">AI</string>
+    <string name="mode_ai_hint">Roadmap order and explanations are personalised by an AI model.</string>
+    <string name="mode_static">Static</string>
+    <string name="mode_static_hint">Standard roadmap order and descriptions.</string>
+    <string name="settings_api_key">Gemini API key</string>
+    <string name="api_key_label">API key (overrides the built-in key)</string>
+    <string name="api_key_build_present">A key was built into this app. Enter one here to override it.</string>
+    <string name="api_key_build_missing">No key was built into this app. AI mode needs a key.</string>
+    <string name="api_key_saved">Saved</string>
+    <string name="settings_reset">Progress</string>
+    <string name="reset_confirm_title">Reset progress?</string>
+    <string name="reset_confirm_body">This clears every skill you ticked as done. Your path and settings stay.</string>
+    <string name="reset_done">Progress cleared.</string>
+
+    <!-- Empty and error states -->
+    <string name="empty_no_path">You haven\'t chosen a career path yet.</string>
+    <string name="empty_search">Nothing matches your search.</string>
+    <string name="empty_links">No links for this skill yet.</string>
+    <string name="empty_opportunities">No opportunities of this type right now.</string>
+    <string name="empty_hub">No guides found.</string>
+    <string name="error_roadmap">Couldn\'t load your roadmap.</string>
+    <string name="error_skill">Couldn\'t find this skill.</string>
+    <string name="error_opportunities">Couldn\'t load opportunities.</string>
+    <string name="error_hub">Couldn\'t load the guides.</string>
+</resources>
