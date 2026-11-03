@@ -5,6 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write # lets the job publish the APK as a release
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,3 +30,13 @@ jobs:
           name: techpath-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+      - name: Publish APK to the "latest-debug" release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk techpath-debug.apk
+          gh release delete latest-debug --yes --cleanup-tag || true
+          gh release create latest-debug techpath-debug.apk \
+            --prerelease --target "$GITHUB_SHA" --title "TechPath debug build" \
+            --notes "Debug APK built from ${GITHUB_REF_NAME} at ${GITHUB_SHA::7}. Download techpath-debug.apk on an Android phone to install."
