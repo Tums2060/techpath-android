@@ -1,0 +1,639 @@
+[
+ {
+  "id": "ai-agents",
+  "name": "AI Agents",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 101
+ },
+ {
+  "id": "ai-data-scientist",
+  "name": "AI Data Scientist",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 8
+ },
+ {
+  "id": "ai-engineer",
+  "name": "AI Engineer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 190
+ },
+ {
+  "id": "ai-product-builder",
+  "name": "AI Product Builder",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 51
+ },
+ {
+  "id": "ai-red-teaming",
+  "name": "AI Red Teaming",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 64
+ },
+ {
+  "id": "android",
+  "name": "Android",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 114
+ },
+ {
+  "id": "angular",
+  "name": "Angular",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 159
+ },
+ {
+  "id": "api-design",
+  "name": "Api Design",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 97
+ },
+ {
+  "id": "aspnet-core",
+  "name": "Aspnet Core",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 146
+ },
+ {
+  "id": "aws",
+  "name": "Aws",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 101
+ },
+ {
+  "id": "backend",
+  "name": "Backend",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 155
+ },
+ {
+  "id": "backend-beginner",
+  "name": "Backend",
+  "type": "role",
+  "parent": "backend",
+  "nodeCount": 26
+ },
+ {
+  "id": "bi-analyst",
+  "name": "BI Analyst",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 203
+ },
+ {
+  "id": "blockchain",
+  "name": "Blockchain",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 127
+ },
+ {
+  "id": "c",
+  "name": "C",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 145
+ },
+ {
+  "id": "claude-code",
+  "name": "Claude Code",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 112
+ },
+ {
+  "id": "cloudflare",
+  "name": "Cloudflare",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 97
+ },
+ {
+  "id": "computer-science",
+  "name": "Computer Science",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 188
+ },
+ {
+  "id": "cpp",
+  "name": "Cpp",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 127
+ },
+ {
+  "id": "css",
+  "name": "Css",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 104
+ },
+ {
+  "id": "cyber-security",
+  "name": "Cyber Security",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 301
+ },
+ {
+  "id": "data-analyst",
+  "name": "Data Analyst",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 102
+ },
+ {
+  "id": "data-engineer",
+  "name": "Data Engineer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 187
+ },
+ {
+  "id": "datastructures-and-algorithms",
+  "name": "Datastructures And Algorithms",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 106
+ },
+ {
+  "id": "design-system",
+  "name": "Design System",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 123
+ },
+ {
+  "id": "devops",
+  "name": "DevOps",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 138
+ },
+ {
+  "id": "devops-beginner",
+  "name": "DevOps",
+  "type": "role",
+  "parent": "devops",
+  "nodeCount": 13
+ },
+ {
+  "id": "devrel",
+  "name": "DevRel",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 142
+ },
+ {
+  "id": "devsecops",
+  "name": "DevSecOps",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 94
+ },
+ {
+  "id": "django",
+  "name": "Django",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 112
+ },
+ {
+  "id": "docker",
+  "name": "Docker",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 56
+ },
+ {
+  "id": "elasticsearch",
+  "name": "Elasticsearch",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 113
+ },
+ {
+  "id": "engineering-manager",
+  "name": "Engineering Manager",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 133
+ },
+ {
+  "id": "flutter",
+  "name": "Flutter",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 108
+ },
+ {
+  "id": "forward-deployed-engineer",
+  "name": "Forward Deployed Engineer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 96
+ },
+ {
+  "id": "frontend",
+  "name": "Frontend",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 120
+ },
+ {
+  "id": "frontend-beginner",
+  "name": "Frontend",
+  "type": "role",
+  "parent": "frontend",
+  "nodeCount": 9
+ },
+ {
+  "id": "full-stack",
+  "name": "Full Stack",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 37
+ },
+ {
+  "id": "game-developer",
+  "name": "Game Developer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 143
+ },
+ {
+  "id": "git-github",
+  "name": "Git Github",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 155
+ },
+ {
+  "id": "git-github-beginner",
+  "name": "Git Github",
+  "type": "skill",
+  "parent": "git-github",
+  "nodeCount": 5
+ },
+ {
+  "id": "golang",
+  "name": "Golang",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 172
+ },
+ {
+  "id": "graphql",
+  "name": "Graphql",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 65
+ },
+ {
+  "id": "html",
+  "name": "Html",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 88
+ },
+ {
+  "id": "ios",
+  "name": "iOS",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 170
+ },
+ {
+  "id": "java",
+  "name": "Java",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 88
+ },
+ {
+  "id": "javascript",
+  "name": "Javascript",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 125
+ },
+ {
+  "id": "kotlin",
+  "name": "Kotlin",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 153
+ },
+ {
+  "id": "kubernetes",
+  "name": "Kubernetes",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 67
+ },
+ {
+  "id": "laravel",
+  "name": "Laravel",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 104
+ },
+ {
+  "id": "leetcode",
+  "name": "Leetcode",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 137
+ },
+ {
+  "id": "linux",
+  "name": "Linux",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 102
+ },
+ {
+  "id": "machine-learning",
+  "name": "Machine Learning",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 150
+ },
+ {
+  "id": "mlops",
+  "name": "MLOps",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 62
+ },
+ {
+  "id": "mongodb",
+  "name": "Mongodb",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 106
+ },
+ {
+  "id": "network-engineer",
+  "name": "Network Engineer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 196
+ },
+ {
+  "id": "nextjs",
+  "name": "Nextjs",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 94
+ },
+ {
+  "id": "nodejs",
+  "name": "Nodejs",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 113
+ },
+ {
+  "id": "openclaw",
+  "name": "Openclaw",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 118
+ },
+ {
+  "id": "php",
+  "name": "Php",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 120
+ },
+ {
+  "id": "postgresql-dba",
+  "name": "Postgresql DBA",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 164
+ },
+ {
+  "id": "power-bi",
+  "name": "Power BI",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 146
+ },
+ {
+  "id": "product-design",
+  "name": "Product Design",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 118
+ },
+ {
+  "id": "product-manager",
+  "name": "Product Manager",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 172
+ },
+ {
+  "id": "prompt-engineering",
+  "name": "Prompt Engineering",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 46
+ },
+ {
+  "id": "python",
+  "name": "Python",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 86
+ },
+ {
+  "id": "python-data-analysis",
+  "name": "Python Data Analysis",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 113
+ },
+ {
+  "id": "qa",
+  "name": "QA",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 146
+ },
+ {
+  "id": "r",
+  "name": "R",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 129
+ },
+ {
+  "id": "react",
+  "name": "React",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 82
+ },
+ {
+  "id": "react-native",
+  "name": "React Native",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 94
+ },
+ {
+  "id": "redis",
+  "name": "Redis",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 147
+ },
+ {
+  "id": "ruby",
+  "name": "Ruby",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 106
+ },
+ {
+  "id": "ruby-on-rails",
+  "name": "Ruby On Rails",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 107
+ },
+ {
+  "id": "rust",
+  "name": "Rust",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 122
+ },
+ {
+  "id": "scala",
+  "name": "Scala",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 165
+ },
+ {
+  "id": "server-side-game-developer",
+  "name": "Server Side Game Developer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 153
+ },
+ {
+  "id": "shell-bash",
+  "name": "Shell Bash",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 174
+ },
+ {
+  "id": "software-architect",
+  "name": "Software Architect",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 112
+ },
+ {
+  "id": "software-design-architecture",
+  "name": "Software Design Architecture",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 94
+ },
+ {
+  "id": "spring-boot",
+  "name": "Spring Boot",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 46
+ },
+ {
+  "id": "sql",
+  "name": "Sql",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 112
+ },
+ {
+  "id": "swift-ui",
+  "name": "Swift Ui",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 156
+ },
+ {
+  "id": "system-design",
+  "name": "System Design",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 147
+ },
+ {
+  "id": "technical-writer",
+  "name": "Technical Writer",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 84
+ },
+ {
+  "id": "terraform",
+  "name": "Terraform",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 110
+ },
+ {
+  "id": "typescript",
+  "name": "Typescript",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 93
+ },
+ {
+  "id": "ux-design",
+  "name": "UX Design",
+  "type": "role",
+  "parent": null,
+  "nodeCount": 94
+ },
+ {
+  "id": "vibe-coding",
+  "name": "Vibe Coding",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 50
+ },
+ {
+  "id": "vue",
+  "name": "Vue",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 84
+ },
+ {
+  "id": "wordpress",
+  "name": "Wordpress",
+  "type": "skill",
+  "parent": null,
+  "nodeCount": 115
+ }
+]
