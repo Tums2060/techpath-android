@@ -1,19 +1,9 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
-
-// Optional: a Gemini key in local.properties (git-ignored) is used as the default
-// for debug builds only. Release builds never contain a key; users enter it in Settings.
-val localProps = Properties().apply {
-    val f = rootProject.file("local.properties")
-    if (f.exists()) f.inputStream().use { load(it) }
-}
-val debugGeminiKey: String = (localProps.getProperty("GEMINI_API_KEY") ?: System.getenv("GEMINI_API_KEY") ?: "").trim()
 
 android {
     namespace = "com.techpath.app"
@@ -25,14 +15,9 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
-        buildConfigField("String", "DEFAULT_GEMINI_KEY", "\"\"")
-        buildConfigField("String", "DEFAULT_TEXT_MODEL", "\"gemini-3.8-flash\"")
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "DEFAULT_GEMINI_KEY", "\"$debugGeminiKey\"")
-        }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -74,7 +59,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.browser)
-    implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
     debugImplementation(libs.androidx.compose.ui.tooling)

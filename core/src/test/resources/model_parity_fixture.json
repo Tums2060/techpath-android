@@ -1,0 +1,243 @@
+{
+ "cases": [
+  {
+   "text": "I want to build mobile apps for Android phones",
+   "cleaned": "i want to build mobile apps for android phones",
+   "tfidf": {
+    "2418": 0.26199630340194124,
+    "3467": 0.24279873370500663,
+    "6266": 0.19967251526682084,
+    "6313": 0.4535817394365134,
+    "35895": 0.27035741280902165,
+    "35900": 0.3444469740857968,
+    "41255": 0.404864566198662,
+    "63542": 0.25575895738096444,
+    "63544": 0.4535817394365134
+   },
+   "top3": [
+    {
+     "path": "android",
+     "p": 0.736778983591
+    },
+    {
+     "path": "data-engineer",
+     "p": 0.019139002208845176
+    },
+    {
+     "path": "flutter",
+     "p": 0.014169663279492956
+    }
+   ],
+   "top5_skills": [
+    "Activity",
+    "Google Play Services",
+    "Jetpack Benchmark",
+    "Hilt",
+    "Development IDE"
+   ]
+  },
+  {
+   "text": "I like protecting systems from hackers and analysing attacks",
+   "cleaned": "i like protecting systems from hackers and analysing attacks",
+   "tfidf": {
+    "2205": 0.5884878565532076,
+    "4129": 0.3658228728079923,
+    "25243": 0.5109011546035513,
+    "31884": 0.15602057070633507,
+    "44283": 0.42658925971321504,
+    "56067": 0.2291612176143195
+   },
+   "top3": [
+    {
+     "path": "cyber-security",
+     "p": 0.1561303064848073
+    },
+    {
+     "path": "backend",
+     "p": 0.05034860963150699
+    },
+    {
+     "path": "system-design",
+     "p": 0.04518606269290893
+    }
+   ],
+   "top5_skills": [
+    "APT",
+    "Bus",
+    "Common Hacking Tools",
+    "Salting",
+    "Impersonation"
+   ]
+  },
+  {
+   "text": "I enjoy working with data pipelines and large databases",
+   "cleaned": "i enjoy working with data pipelines and large databases",
+   "tfidf": {
+    "13470": 0.11062992022880447,
+    "13937": 0.367630549097065,
+    "14373": 0.24031806517876347,
+    "19604": 0.47602581971189084,
+    "30969": 0.2049473014787297,
+    "30981": 0.47602581971189084,
+    "41456": 0.276449822050372,
+    "64316": 0.23773881296628369,
+    "64325": 0.4082979572800062
+   },
+   "top3": [
+    {
+     "path": "data-engineer",
+     "p": 0.45847829004071416
+    },
+    {
+     "path": "forward-deployed-engineer",
+     "p": 0.04920458178671463
+    },
+    {
+     "path": "python-data-analysis",
+     "p": 0.03895466152039723
+    }
+   ],
+   "top5_skills": [
+    "Data Pipelines",
+    "Luigi",
+    "Skills and Responsibilities",
+    "Prefect",
+    "APIs"
+   ]
+  },
+  {
+   "text": "I want to train machine learning models",
+   "cleaned": "i want to train machine learning models",
+   "tfidf": {
+    "31329": 0.3172901259424175,
+    "31366": 0.4308551962234994,
+    "33367": 0.31347022250343465,
+    "33378": 0.3541054395682566,
+    "36164": 0.3008140786982061,
+    "58635": 0.5138074515498036,
+    "63542": 0.3681702404151095
+   },
+   "top3": [
+    {
+     "path": "mlops",
+     "p": 0.6898922372949083
+    },
+    {
+     "path": "machine-learning",
+     "p": 0.20787622543982354
+    },
+    {
+     "path": "data-analyst",
+     "p": 0.0129402542407107
+    }
+   ],
+   "top5_skills": [
+    "Continuous Machine Learning (CML)",
+    "Cloud-Native ML Services",
+    "Kubeflow",
+    "DVC",
+    "Monitoring & Observability"
+   ]
+  },
+  {
+   "text": "I want to be a quantitative programmer",
+   "cleaned": "i want to be a quantitative programmer",
+   "tfidf": {
+    "43794": 0.6194960396580138,
+    "45219": 0.6559517000011509,
+    "63542": 0.4312215487584503
+   },
+   "top3": [
+    {
+     "path": "computer-science",
+     "p": 0.07575667833183754
+    },
+    {
+     "path": "c",
+     "p": 0.05957230375274036
+    },
+    {
+     "path": "nodejs",
+     "p": 0.0518258947438896
+    }
+   ],
+   "top5_skills": [
+    "Design Patterns",
+    "Networking",
+    "2-3-4 Search Trees",
+    "2-3 Search Trees",
+    "A* Algorithm"
+   ]
+  },
+  {
+   "text": "Check [the docs](https://x.io) for C++, C# & .NET -- @official@ SQL!!",
+   "cleaned": "check the docs for c++ c# .net sql",
+   "tfidf": {
+    "7728": 0.4615280930224555,
+    "17565": 0.638788319465602,
+    "37492": 0.46605831266093223,
+    "53608": 0.40215786883388505
+   },
+   "top3": [
+    {
+     "path": "aspnet-core",
+     "p": 0.9485707666675763
+    },
+    {
+     "path": "sql",
+     "p": 0.024486925495193716
+    },
+    {
+     "path": "golang",
+     "p": 0.0028737670578058384
+    }
+   ],
+   "top5_skills": [
+    "Marten",
+    "Frameworks",
+    ".NET CLI",
+    "YARP",
+    ".NET Aspire"
+   ]
+  },
+  {
+   "text": "Caf\u00e9 \u00c9LAN: na\u00efve r\u00e9sum\u00e9 builder, React/Node.js, AWS_LAMBDA",
+   "cleaned": "caf lan na ve r sum builder react node.js aws lambda",
+   "tfidf": {
+    "4689": 0.23252676735286815,
+    "4715": 0.3269747052024454,
+    "6358": 0.31234136780311744,
+    "30062": 0.2106717847390793,
+    "30750": 0.2948777053345128,
+    "30770": 0.3450363011677302,
+    "36947": 0.3840343858317895,
+    "37973": 0.21526421302117904,
+    "37981": 0.2435945721895739,
+    "45747": 0.2136802105180112,
+    "55564": 0.28615818941625554,
+    "62804": 0.33222139489053276
+   },
+   "top3": [
+    {
+     "path": "nodejs",
+     "p": 0.5211750344209217
+    },
+    {
+     "path": "aws",
+     "p": 0.30469783991519916
+    },
+    {
+     "path": "nextjs",
+     "p": 0.038544859959351786
+    }
+   ],
+   "top5_skills": [
+    "--watch",
+    "Error Handling",
+    "__filename",
+    "History of Node.js",
+    "Running Node.js Code"
+   ]
+  }
+ ]
+}

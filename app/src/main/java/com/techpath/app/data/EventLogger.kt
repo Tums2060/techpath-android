@@ -12,7 +12,6 @@ object Events {
     const val ONBOARDING_DONE = "onboarding_completed"
     const val CAREER_MATCHED = "career_matched"
     const val ROADMAP_GENERATED = "roadmap_generated"
-    const val ROADMAP_FALLBACK = "roadmap_fallback_static"
     const val SKILL_OPENED = "skill_opened"
     const val STATUS_CHANGED = "status_changed"
     const val RESOURCE_OPENED = "resource_opened"

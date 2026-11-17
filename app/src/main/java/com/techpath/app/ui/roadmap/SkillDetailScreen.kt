@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.OndemandVideo
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,7 +46,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techpath.app.AppContainer
 import com.techpath.app.data.Events
-import com.techpath.app.data.RoadmapRepository
 import com.techpath.app.data.db.SkillStatus
 import com.techpath.app.ui.LoadingState
 import com.techpath.app.ui.MessageState
@@ -56,6 +54,7 @@ import com.techpath.app.ui.openUrl
 import com.techpath.core.CareerPath
 import com.techpath.core.Resource
 import com.techpath.core.ResourceParser
+import com.techpath.core.SkillExplanation
 import com.techpath.core.SkillNode
 import com.techpath.core.StudyMode
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +68,7 @@ data class SkillUiState(
     val career: CareerPath? = null,
     val mode: StudyMode = StudyMode.STATIC,
     val explaining: Boolean = false,
-    val explanation: RoadmapRepository.Explanation? = null,
+    val explanation: SkillExplanation? = null,
     val explainError: String? = null,
     val why: String? = null,
 )
@@ -85,7 +84,7 @@ class SkillViewModel(private val c: AppContainer, private val path: String, priv
             val mode = c.roadmaps.modeState().effective
             _state.update { it.copy(loading = false, node = kb.node(path, nodeId), career = kb.career(path), mode = mode) }
             c.logger.log(Events.SKILL_OPENED, path, nodeId)
-            if (mode == StudyMode.AI) explain(false)
+            if (mode == StudyMode.AI) explain()
         }
         viewModelScope.launch {
             c.roadmaps.observeRoadmap(path).collect { r ->
@@ -95,11 +94,11 @@ class SkillViewModel(private val c: AppContainer, private val path: String, priv
         }
     }
 
-    fun explain(force: Boolean) {
+    fun explain() {
         _state.update { it.copy(explaining = true, explainError = null) }
         viewModelScope.launch {
             try {
-                val e = c.roadmaps.explanation(path, nodeId, forceRefresh = force)
+                val e = c.roadmaps.explanation(path, nodeId)
                 _state.update { it.copy(explaining = false, explanation = e) }
             } catch (e: Exception) {
                 _state.update { it.copy(explaining = false, explainError = e.message ?: "Couldn't load the explanation") }
@@ -160,28 +159,26 @@ fun SkillDetailScreen(container: AppContainer, path: String, nodeId: String, onB
                     val e = s.explanation
                     when {
                         s.explaining && e == null -> item {
-                            Column { Text("Writing an explanation for you…", style = MaterialTheme.typography.bodyMedium); LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 8.dp)) }
+                            Column { Text("Analysing this skill…", style = MaterialTheme.typography.bodyMedium); LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 8.dp)) }
                         }
                         e != null -> {
                             item { Section("What it means", e.whatItMeans) }
                             item { Section("What it involves", e.whatItInvolves) }
                             item { Section("Why it matters for ${s.career?.name ?: "this career"}", e.whyItMatters) }
-                            item {
-                                TextButton(onClick = { vm.explain(true) }, enabled = !s.explaining) {
-                                    Icon(Icons.Outlined.Refresh, null); Spacer(Modifier.width(6.dp)); Text("Regenerate explanation")
-                                }
-                            }
                         }
                         else -> item {
                             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
                                 Column(Modifier.padding(16.dp)) {
                                     Text(s.explainError ?: "No explanation yet.", style = MaterialTheme.typography.bodyMedium)
-                                    TextButton(onClick = { vm.explain(false) }) { Text("Try again") }
+                                    TextButton(onClick = { vm.explain() }) { Text("Try again") }
                                 }
                             }
                         }
                     }
-                    item { Section("From the roadmap dataset", node.description, muted = true) }
+                    item {
+                        Text("Explanation built on your phone from the roadmap.sh description and the TechPath ML model.",
+                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 } else {
                     item { Section("About this skill", node.description) }
                 }

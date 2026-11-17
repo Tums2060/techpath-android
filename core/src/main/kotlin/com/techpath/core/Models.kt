@@ -1,8 +1,12 @@
 package com.techpath.core
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * The two study conditions. AI = the on-device ML engine (TF-IDF + Logistic
+ * Regression + cosine retrieval) personalises the roadmap; STATIC = the same
+ * path shown as a fixed checklist (control condition).
+ */
 enum class StudyMode { AI, STATIC }
 
 @Serializable
@@ -12,7 +16,7 @@ data class Resource(
     val type: String,
 )
 
-/** One roadmap.sh topic ("node") of a career path, with its embedding. */
+/** One roadmap.sh topic ("skill node") of a career path, with its TF-IDF vector. */
 class SkillNode(
     val id: String,
     val path: String,
@@ -21,7 +25,8 @@ class SkillNode(
     val description: String,
     val core: Boolean,
     val resources: List<Resource>,
-    val vector: FloatArray,
+    /** TF-IDF vector of the cleaned "title. description" text the model was trained on. */
+    val vector: SparseVector,
 )
 
 class CareerPath(
@@ -30,22 +35,7 @@ class CareerPath(
     val type: String,
     val description: String,
     val nodeCount: Int,
-    val vector: FloatArray,
 )
-
-/** How the asset vectors were made; the app must embed queries the same way. */
-@Serializable
-data class EmbeddingMeta(
-    val kind: String,
-    val model: String,
-    val dims: Int,
-    val idf: List<Double> = emptyList(),
-    @SerialName("known_threshold") val knownThreshold: Double = 0.8,
-    @SerialName("known_compare") val knownCompare: String = "node",
-    val encoding: String = "float16-le-base64",
-) {
-    val isLocal: Boolean get() = kind == "hash"
-}
 
 @Serializable
 data class RoadmapItem(
@@ -64,7 +54,7 @@ data class RoadmapStage(
 @Serializable
 data class Roadmap(
     val careerPath: String,
-    /** "ai", "static", or "static-fallback" (AI was requested but unavailable). */
+    /** "ai" (ML-personalised) or "static" (control checklist). */
     val source: String,
     val stages: List<RoadmapStage>,
     val generatedAt: Long = 0L,
@@ -72,3 +62,10 @@ data class Roadmap(
 ) {
     val nodeIds: List<String> get() = stages.flatMap { s -> s.items.map { it.nodeId } }
 }
+
+/** "What it means / What it involves / Why it matters" for one skill. */
+data class SkillExplanation(
+    val whatItMeans: String,
+    val whatItInvolves: String,
+    val whyItMatters: String,
+)

@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -26,7 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -46,8 +43,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.techpath.app.AppContainer
 import com.techpath.app.data.AppSettings
@@ -55,7 +50,8 @@ import com.techpath.app.data.Events
 import com.techpath.app.data.ModeState
 import com.techpath.app.ui.LoadingState
 import com.techpath.app.ui.NoticeBanner
-import com.techpath.core.EmbeddingMeta
+import com.techpath.app.data.KnowledgeBase
+import com.techpath.core.SkillGap
 import com.techpath.core.StudyMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,7 +63,7 @@ import java.time.LocalDate
 fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onAbout: () -> Unit) {
     val settings by container.settings.settings.collectAsState(initial = null)
     val eventCount by container.db.events().count().collectAsState(initial = 0)
-    val meta by produceState<EmbeddingMeta?>(null) { value = container.knowledgeBase.get().embedding }
+    val kb by produceState<KnowledgeBase.Data?>(null) { value = container.knowledgeBase.get() }
     val modeState by produceState<ModeState?>(null, settings) { value = container.roadmaps.modeState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -98,8 +94,7 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onAbout: () -> U
         }
         LazyColumn(Modifier.padding(pad), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             item { StudyModeCard(s, modeState) { m -> scope.launch { container.settings.setMode(m); container.logger.log(Events.MODE_CHANGED, detail = m.name) } } }
-            item { ApiKeyCard(s, onSave = { k -> scope.launch { container.settings.setApiKey(k) } }) }
-            item { ModelCard(s, meta, onModel = { m -> scope.launch { container.settings.setTextModel(m) } }, onThreshold = { t -> scope.launch { container.settings.setKnownThreshold(t) } }) }
+            item { ModelCard(s, kb, onThreshold = { t -> scope.launch { container.settings.setKnownThreshold(t) } }) }
             item {
                 SettingsCard("Study data") {
                     Text("Participant ID: ${s.participantId.ifEmpty { "—" }}", style = MaterialTheme.typography.bodyMedium)
@@ -110,16 +105,16 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onAbout: () -> U
             item {
                 SettingsCard("Maintenance") {
                     OutlinedButton(onClick = {
-                        scope.launch { container.roadmaps.clearCaches(); Toast.makeText(context, "Cached roadmaps and explanations cleared", Toast.LENGTH_SHORT).show() }
-                    }) { Text("Clear AI cache") }
-                    Text("Removes saved roadmaps and skill explanations; your progress is kept.", style = MaterialTheme.typography.bodySmall)
+                        scope.launch { container.roadmaps.clearCaches(); Toast.makeText(context, "Saved roadmaps cleared", Toast.LENGTH_SHORT).show() }
+                    }) { Text("Clear saved roadmaps") }
+                    Text("Roadmaps are rebuilt next time you open them; your progress is kept.", style = MaterialTheme.typography.bodySmall)
                     OutlinedButton(onClick = { confirmReset = true }) { Text("Reset onboarding") }
                 }
             }
             item {
                 ListItem(
                     headlineContent = { Text("About TechPath & AI use") },
-                    supportingContent = { Text("How the AI works, what data is used, limitations") },
+                    supportingContent = { Text("How the ML engine works, what data is used, limitations") },
                     trailingContent = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null) },
                     modifier = Modifier.clickable(onClick = onAbout),
                 )
@@ -165,7 +160,7 @@ private fun StudyModeCard(s: AppSettings, mode: ModeState?, onMode: (StudyMode) 
             }
         }
         Text(
-            if (s.mode == StudyMode.AI) "Personalised roadmap: retrieval over the roadmap dataset plus an LLM that sequences and explains skills."
+            if (s.mode == StudyMode.AI) "Personalised roadmap from the on-device ML engine: TF-IDF + Logistic Regression predicts your career path, cosine similarity picks the skills closest to your goal."
             else "Control condition: the career path's topics as a fixed checklist with the dataset's own descriptions. No personalisation, no AI.",
             style = MaterialTheme.typography.bodySmall,
         )
@@ -174,42 +169,24 @@ private fun StudyModeCard(s: AppSettings, mode: ModeState?, onMode: (StudyMode) 
 }
 
 @Composable
-private fun ApiKeyCard(s: AppSettings, onSave: (String?) -> Unit) {
-    var key by remember { mutableStateOf("") }
-    var show by remember { mutableStateOf(false) }
-    SettingsCard("Gemini API key") {
-        Text(
-            if (s.hasApiKey) "A key is saved (encrypted with the Android Keystore)." else "No key saved. AI mode needs a free key from Google AI Studio (aistudio.google.com).",
-            style = MaterialTheme.typography.bodySmall,
-        )
-        OutlinedTextField(
-            key, { key = it.trim() }, label = { Text(if (s.hasApiKey) "Replace key" else "Paste key") }, singleLine = true,
-            visualTransformation = if (show) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = { IconButton(onClick = { show = !show }) { Icon(if (show) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility, if (show) "Hide" else "Show") } },
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onSave(key); key = "" }, enabled = key.length >= 20) { Text("Save key") }
-            if (s.hasApiKey) OutlinedButton(onClick = { onSave(null) }) { Text("Remove key") }
+private fun ModelCard(s: AppSettings, kb: KnowledgeBase.Data?, onThreshold: (Float?) -> Unit) {
+    val default = SkillGap.DEFAULT_THRESHOLD
+    var threshold by remember(s.knownThreshold) { mutableFloatStateOf(s.knownThreshold ?: default) }
+    SettingsCard("ML engine (on-device)") {
+        if (kb == null) {
+            Text("Loading model…", style = MaterialTheme.typography.bodySmall)
+        } else {
+            val m = kb.model.meta
+            Text("${m.model}: ${m.classes.size} career paths, ${"%,d".format(kb.nodeCount)} skills, " +
+                "${"%,d".format(m.nFeatures)} TF-IDF features (unigrams + bigrams), C = ${m.logisticRegression.c.toInt()}.",
+                style = MaterialTheme.typography.bodySmall)
+            Text("Held-out test set: accuracy %.3f · macro-F1 %.3f · top-3 accuracy %.3f".format(
+                m.metrics.testAccuracy, m.metrics.testMacroF1, m.metrics.testTop3Accuracy), style = MaterialTheme.typography.bodySmall)
+            Text("Runs fully offline. No API key or internet connection is needed.", style = MaterialTheme.typography.bodySmall)
         }
-    }
-}
-
-@Composable
-private fun ModelCard(s: AppSettings, meta: EmbeddingMeta?, onModel: (String) -> Unit, onThreshold: (Float?) -> Unit) {
-    var model by remember(s.textModel) { mutableStateOf(s.textModel) }
-    val default = meta?.knownThreshold?.toFloat() ?: 0.8f
-    var threshold by remember(s.knownThreshold, default) { mutableFloatStateOf(s.knownThreshold ?: default) }
-    SettingsCard("AI settings") {
-        OutlinedTextField(model, { model = it }, label = { Text("Text model") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = { onModel(model) }, enabled = model.isNotBlank() && model != s.textModel) { Text("Use model") }
-        }
-        Text("Embeddings: ${meta?.let { "${it.model} (${it.dims} dims${if (it.isLocal) ", offline fallback" else ""})" } ?: "loading…"}",
-            style = MaterialTheme.typography.bodySmall)
         Text("\"Already known\" threshold: %.2f".format(threshold), style = MaterialTheme.typography.bodyMedium)
         Slider(value = threshold, onValueChange = { threshold = it }, valueRange = 0.3f..0.95f, onValueChangeFinished = { onThreshold(threshold) })
-        Text("A skill you typed counts as known when its similarity to a roadmap topic is at least this value. Default %.2f.".format(default),
+        Text("A skill you typed counts as known when its TF-IDF similarity to a roadmap topic title is at least this value. Default %.2f.".format(default),
             style = MaterialTheme.typography.bodySmall)
         if (s.knownThreshold != null) TextButton(onClick = { onThreshold(null) }) { Text("Reset to default") }
     }

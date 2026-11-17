@@ -4,14 +4,12 @@ import android.content.Context
 import com.techpath.app.data.db.ApplicationStatus
 import com.techpath.app.data.db.OpportunityDao
 import com.techpath.app.data.db.SavedOpportunityEntity
-import com.techpath.core.VectorCodec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import java.time.LocalDate
 
@@ -27,9 +25,9 @@ data class Opportunity(
     val requirements: List<String>,
     val description: String = "",
     @SerialName("apply_url") val applyUrl: String,
-    @SerialName("vector") val vectorB64: String = "",
 ) {
-    @Transient val vector: FloatArray? = vectorB64.takeIf { it.isNotEmpty() }?.let { VectorCodec.decode(it) }
+    /** Text the ML model scores for relevance. */
+    val modelText: String get() = "$title. ${requirements.joinToString(", ")}. $description"
     val deadlineDate: LocalDate? get() = runCatching { LocalDate.parse(deadline) }.getOrNull()
 }
 

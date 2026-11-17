@@ -109,7 +109,7 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
                 return@launch
             }
             val r = c.roadmaps.matchCareers(_state.value.interest)
-            r.matches.firstOrNull()?.let { c.logger.log(Events.CAREER_MATCHED, it.career.id, detail = "direct=${r.direct != null};score=%.3f".format(it.score)) }
+            r.matches.firstOrNull()?.let { c.logger.log(Events.CAREER_MATCHED, it.career.id, detail = "direct=${r.direct != null};probability=%.3f".format(it.probability)) }
             _state.update {
                 it.copy(
                     matching = false, matches = r.matches, matchError = r.error,

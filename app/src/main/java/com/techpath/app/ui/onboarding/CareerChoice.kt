@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.techpath.core.CareerMatcher
 import com.techpath.core.CareerPath
 
-/** Top-3 career matches with similarity scores (AI mode). */
+/** Top-3 career paths predicted by the Logistic Regression model, with probabilities (AI mode). */
 fun LazyListScope.matchCards(matches: List<CareerMatcher.Match>, selected: String?, onSelect: (String) -> Unit) {
     items(matches, key = { "m-" + it.career.id }) { m ->
         val isSel = m.career.id == selected
@@ -49,13 +49,17 @@ fun LazyListScope.matchCards(matches: List<CareerMatcher.Match>, selected: Strin
                 Text(m.career.description, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 Spacer(Modifier.padding(4.dp))
                 if (m.direct) {
-                    Text("Exact match for the path name", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                } else {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        LinearProgressIndicator(progress = { m.score.coerceIn(0f, 1f) }, modifier = Modifier.weight(1f))
-                        Spacer(Modifier.width(8.dp))
-                        Text("similarity %.2f".format(m.score), style = MaterialTheme.typography.labelMedium)
-                    }
+                    Text("Matches the path name you typed", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    LinearProgressIndicator(progress = { m.probability.coerceIn(0f, 1f) }, modifier = Modifier.weight(1f))
+                    Spacer(Modifier.width(8.dp))
+                    Text("probability %.2f".format(m.probability), style = MaterialTheme.typography.labelMedium)
+                }
+                if (m.closestSkills.isNotEmpty()) {
+                    Text("Closest skills: " + m.closestSkills.joinToString(), style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 4.dp))
                 }
                 Text("${m.career.nodeCount} topics", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }

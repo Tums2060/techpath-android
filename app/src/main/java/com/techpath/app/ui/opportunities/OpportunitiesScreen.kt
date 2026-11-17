@@ -57,7 +57,6 @@ import com.techpath.app.ui.LoadingState
 import com.techpath.app.ui.MessageState
 import com.techpath.app.ui.NoticeBanner
 import com.techpath.app.ui.openUrl
-import com.techpath.core.Relevance
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -116,15 +115,11 @@ class OpportunitiesViewModel(private val c: AppContainer) : ViewModel() {
                 val listings = c.opportunities.source.listings()
                 val pathFlow = c.settings.settings.map { it.profile.careerPath }.distinctUntilChanged()
                 pathFlow.flatMapLatest { path ->
-                    val roadmapFlow = if (path == null) kotlinx.coroutines.flow.flowOf(null) else c.roadmaps.observeRoadmap(path)
-                    combine(roadmapFlow, c.opportunities.saved) { r, saved -> Triple(path, r, saved) }
-                }.collect { (path, roadmap, saved) ->
-                    val student = c.roadmaps.studentVector(path, roadmap)
-                    val items = listings.map { o ->
-                        val v = o.vector
-                        val rel = if (student != null && v != null && v.size == student.size) Relevance.percent(student, v) else null
-                        Listing(o, rel, saved[o.id], kb.career(o.field)?.name ?: o.field)
-                    }
+                    // Relevance = the model's P(your career path | listing text); computed once per path.
+                    val rel = listings.associate { o -> o.id to c.roadmaps.relevance(path, o.modelText) }
+                    c.opportunities.saved.map { saved -> Triple(path, rel, saved) }
+                }.collect { (_, rel, saved) ->
+                    val items = listings.map { o -> Listing(o, rel[o.id], saved[o.id], kb.career(o.field)?.name ?: o.field) }
                     _state.update { it.copy(loading = false, all = items, isSample = c.opportunities.source.isSample) }
                 }
             } catch (e: Exception) {
@@ -261,7 +256,7 @@ private fun OpportunityCard(l: Listing, today: LocalDate, onStatus: (Application
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 o.requirements.forEach { r -> AssistChip(onClick = {}, label = { Text(r, style = MaterialTheme.typography.labelSmall) }) }
             }
-            l.relevance?.let { Text("Relevance to your roadmap: $it%", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary) }
+            l.relevance?.let { Text("Relevance to your career path: $it%", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary) }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onApply) {
                     Text("Apply on website"); Spacer(Modifier.width(6.dp)); Icon(Icons.AutoMirrored.Outlined.OpenInNew, null)

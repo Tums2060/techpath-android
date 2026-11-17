@@ -158,11 +158,11 @@ fun RoadmapScreen(
         val roadmap = s.roadmap
         val path = s.path
         when {
-            s.loading || kb == null -> LoadingState("Loading the roadmap knowledge base…", Modifier.padding(pad))
+            s.loading || kb == null -> LoadingState("Loading the ML model and roadmap knowledge base…", Modifier.padding(pad))
             path == null -> MessageState("No career path chosen", "Pick a career path to get your roadmap.",
                 actionLabel = "Choose a career", onAction = onSwitchCareer, modifier = Modifier.padding(pad))
             roadmap == null && s.generating -> LoadingState(
-                if (s.mode?.effective == StudyMode.AI) "Retrieving skills and asking the AI to sequence them…" else "Building your roadmap…",
+                if (s.mode?.effective == StudyMode.AI) "Ranking skills with the ML model…" else "Building your roadmap…",
                 Modifier.padding(pad),
             )
             roadmap == null -> MessageState("Couldn't build your roadmap", s.error ?: "Please try again.",
@@ -181,7 +181,7 @@ fun RoadmapScreen(
                             Column(Modifier.padding(16.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(career?.name ?: path, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
-                                    ModeBadge(if (roadmap.source == "ai") StudyMode.AI else StudyMode.STATIC, fallback = roadmap.source == "static-fallback")
+                                    ModeBadge(if (roadmap.source == "ai") StudyMode.AI else StudyMode.STATIC)
                                 }
                                 Text("$done of ${allItems.size} skills done", style = MaterialTheme.typography.bodyMedium)
                                 LinearProgressIndicator(progress = { if (allItems.isEmpty()) 0f else done / allItems.size.toFloat() }, modifier = Modifier.fillMaxWidth())

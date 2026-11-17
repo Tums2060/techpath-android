@@ -91,8 +91,8 @@ fun MessageState(
 @Composable
 fun ModeBadge(mode: StudyMode, fallback: Boolean = false) {
     val (label, icon) = when {
-        fallback -> "Static (offline/no key)" to Icons.Outlined.CloudOff
-        mode == StudyMode.AI -> "AI roadmap" to Icons.Outlined.AutoAwesome
+        fallback -> "Static roadmap" to Icons.Outlined.CloudOff
+        mode == StudyMode.AI -> "AI (ML) roadmap" to Icons.Outlined.AutoAwesome
         else -> "Static roadmap" to Icons.AutoMirrored.Outlined.ListAlt
     }
     Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.small) {

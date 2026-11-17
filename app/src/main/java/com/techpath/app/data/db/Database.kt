@@ -33,18 +33,6 @@ data class SkillStatusEntity(
     val updatedAt: Long,
 )
 
-/** Cached LLM explanation for a skill in the context of a career path. */
-@Entity(tableName = "explanations", primaryKeys = ["careerPath", "nodeId"])
-data class ExplanationEntity(
-    val careerPath: String,
-    val nodeId: String,
-    val whatItMeans: String,
-    val whatItInvolves: String,
-    val whyItMatters: String,
-    val model: String,
-    val createdAt: Long,
-)
-
 enum class ApplicationStatus(val label: String) {
     SAVED("Saved"), APPLIED("Applied"), INTERVIEWING("Interviewing"), OFFER("Offer"), REJECTED("Rejected");
 }
@@ -101,18 +89,6 @@ interface SkillStatusDao {
 }
 
 @Dao
-interface ExplanationDao {
-    @Query("SELECT * FROM explanations WHERE careerPath = :path AND nodeId = :nodeId")
-    suspend fun get(path: String, nodeId: String): ExplanationEntity?
-
-    @Upsert
-    suspend fun upsert(e: ExplanationEntity)
-
-    @Query("DELETE FROM explanations")
-    suspend fun clear()
-}
-
-@Dao
 interface OpportunityDao {
     @Query("SELECT * FROM saved_opportunities")
     fun observeAll(): Flow<List<SavedOpportunityEntity>>
@@ -143,15 +119,14 @@ interface EventDao {
 }
 
 @Database(
-    entities = [RoadmapEntity::class, SkillStatusEntity::class, ExplanationEntity::class,
+    entities = [RoadmapEntity::class, SkillStatusEntity::class,
         SavedOpportunityEntity::class, EventEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roadmaps(): RoadmapDao
     abstract fun skillStatus(): SkillStatusDao
-    abstract fun explanations(): ExplanationDao
     abstract fun opportunities(): OpportunityDao
     abstract fun events(): EventDao
 }

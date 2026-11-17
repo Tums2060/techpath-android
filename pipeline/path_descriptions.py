@@ -1,10 +1,7 @@
 """Display names and short descriptions for each career path.
 
-The descriptions are embedded and blended with the mean of the path's node
-vectors to form the path vector used for career matching. They are written in
-plain student language ("I want to build apps for banks") so that free-text
-interests land near the right path. They were drafted with an LLM and edited by
-hand; `build_assets.py --regenerate-descriptions` can redraft them with Gemini.
+Shown on the career-matching cards and the career list in the app. They are not
+used to train the model (the classifier learns only from the skill texts).
 """
 
 # path id -> (display name, description)

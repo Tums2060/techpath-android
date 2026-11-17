@@ -1,97 +1,110 @@
 package com.techpath.core
 
-/** Step 1: match a free-text career interest to career paths. */
+data class Scored<T>(val item: T, val score: Float)
+
+/** Step 1: predict the most likely career paths for a student's free text. */
 object CareerMatcher {
 
-    data class Match(val career: CareerPath, val score: Float, val direct: Boolean)
+    data class Match(
+        val career: CareerPath,
+        /** Logistic Regression probability P(path | text). */
+        val probability: Float,
+        /** True when the student typed the path's name. */
+        val direct: Boolean,
+        /** Notebook's retrieval step: the closest skills on this path. */
+        val closestSkills: List<String> = emptyList(),
+    )
 
     private fun squash(s: String) = s.lowercase().filter { it.isLetterOrDigit() }
 
-    /**
-     * If the student typed a path name ("Backend", "cyber security", "Android
-     * Developer") return it directly, without embeddings.
-     */
+    /** "Backend", "cyber security", "Android Developer" -> that path, no model needed. */
     fun directMatch(text: String, careers: List<CareerPath>): CareerPath? {
         val q = squash(text)
         if (q.isEmpty()) return null
         return careers.firstOrNull { squash(it.id) == q || squash(it.name) == q }
     }
 
-    fun topMatches(queryVector: FloatArray, careers: List<CareerPath>, k: Int = 3): List<Match> =
-        VectorMath.topK(queryVector, careers, k) { it.vector }.map { Match(it.item, it.score, direct = false) }
-}
-
-/** Step 2: rank a path's nodes against the student's goal. */
-object Retriever {
-
-    const val DEFAULT_K = 28
-    const val MAX_CORE = 8
-
     /**
-     * Top-[k] nodes by cosine similarity to [goalVector], plus the path's core
-     * fundamentals (at most [maxCore]) and any [mustInclude] nodes (e.g. skills
-     * the student said they know), so the LLM always sees them.
+     * The notebook's `recommend()`: top-[k] paths by predicted probability. An exact
+     * path-name match is put first if the model did not already rank it first.
      */
-    fun retrieve(
-        goalVector: FloatArray,
-        pathNodes: List<SkillNode>,
-        k: Int = DEFAULT_K,
-        maxCore: Int = MAX_CORE,
-        mustInclude: Set<String> = emptySet(),
-    ): List<VectorMath.Scored<SkillNode>> {
-        val scored = VectorMath.topK(goalVector, pathNodes, pathNodes.size) { it.vector }
-        val picked = LinkedHashMap<String, VectorMath.Scored<SkillNode>>()
-        scored.take(k).forEach { picked[it.item.id] = it }
-        scored.filter { it.item.core }.take(maxCore).forEach { picked.putIfAbsent(it.item.id, it) }
-        scored.filter { it.item.id in mustInclude }.forEach { picked.putIfAbsent(it.item.id, it) }
-        return picked.values.sortedByDescending { it.score }
+    fun topMatches(
+        model: MlModel,
+        text: String,
+        careers: List<CareerPath>,
+        nodesOf: (String) -> List<SkillNode>,
+        k: Int = 3,
+        skillsPerPath: Int = 5,
+    ): List<Match> {
+        val byId = careers.associateBy { it.id }
+        val q = model.vectorizer.transform(text)
+        val preds = model.classifier.predictProba(q)
+        val direct = directMatch(text, careers)
+        val ranked = model.classifier.topK(q, k).mapNotNull { p -> byId[p.path]?.let { it to p.probability } }
+            .toMutableList()
+        if (direct != null && ranked.firstOrNull()?.first?.id != direct.id) {
+            ranked.removeAll { it.first.id == direct.id }
+            val p = model.classifier.indexOf(direct.id).takeIf { it >= 0 }?.let { preds[it] } ?: 0f
+            ranked.add(0, direct to p)
+            if (ranked.size > k) ranked.removeAt(ranked.lastIndex)
+        }
+        return ranked.map { (c, p) ->
+            Match(c, p, direct = c.id == direct?.id,
+                closestSkills = Retriever.closest(q, nodesOf(c.id), skillsPerPath).map { it.item.title })
+        }
     }
 }
 
-/** Step 3: mark nodes the student already knows. */
+/** Step 2: cosine-similarity retrieval of skills (the notebook's retrieval step). */
+object Retriever {
+
+    /** Skills ranked by cosine similarity to [query], best first; ties keep input order. */
+    fun rank(query: SparseVector, nodes: List<SkillNode>): List<Scored<SkillNode>> =
+        nodes.mapIndexed { i, n -> Triple(i, n, query.dot(n.vector)) }
+            .sortedWith(compareByDescending<Triple<Int, SkillNode, Float>> { it.third }.thenBy { it.first })
+            .map { Scored(it.second, it.third) }
+
+    /** The notebook's top-5 "closest skills on the roadmap" (only skills with any overlap). */
+    fun closest(query: SparseVector, nodes: List<SkillNode>, k: Int = 5): List<Scored<SkillNode>> =
+        if (query.isEmpty()) emptyList() else rank(query, nodes).filter { it.score > 0f }.take(k)
+}
+
+/** Step 3: mark skills the student already knows. */
 object SkillGap {
 
-    const val DEFAULT_THRESHOLD = 0.80f
+    const val DEFAULT_THRESHOLD = 0.60f
 
     /**
-     * A node is "already known" when:
-     *  - the student picked it as a chip, or
-     *  - a free-text skill has the same normalised words as the node title, or
-     *  - cosine(skill, node) >= [threshold] for any free-text skill.
-     *
-     * [compareVector] picks what a skill is compared with: the full node vector
-     * for semantic embeddings, or a title-only vector for the lexical fallback.
+     * A skill node is "already known" when the student picked it as a chip, typed
+     * its exact title, or a typed skill's TF-IDF vector has cosine >= [threshold]
+     * with the node's title vector.
      */
     fun knownNodeIds(
         candidates: List<SkillNode>,
         chipIds: Set<String>,
         skillTexts: List<String>,
-        skillVectors: List<FloatArray>,
-        threshold: Float,
-        compareVector: (SkillNode) -> FloatArray = { it.vector },
+        vectorizer: TfidfVectorizer,
+        threshold: Float = DEFAULT_THRESHOLD,
     ): Set<String> {
-        val skillTokens = skillTexts.map { HashEmbedder.tokens(it) }.filter { it.isNotEmpty() }
+        val typed = skillTexts.map { TextCleaner.clean(it) }.filter { it.isNotEmpty() }
+        val typedVecs = typed.map { vectorizer.transformCleaned(it) }.filterNot { it.isEmpty() }
         return candidates.filter { node ->
-            node.id in chipIds ||
-                HashEmbedder.tokens(node.title).let { t -> skillTokens.any { it == t } } ||
-                skillVectors.any { VectorMath.cosine(it, compareVector(node)) >= threshold }
+            if (node.id in chipIds) return@filter true
+            val title = TextCleaner.clean(node.title)
+            if (typed.any { it == title }) return@filter true
+            if (typedVecs.isEmpty()) return@filter false
+            val tv = vectorizer.transformCleaned(title)
+            typedVecs.any { it.cosine(tv) >= threshold }
         }.map { it.id }.toSet()
     }
 }
 
-/** Opportunity "Relevance": cosine between a listing and the student profile. */
+/** Opportunity "Relevance": the classifier's probability that a listing belongs to the student's path. */
 object Relevance {
-
-    /** Student profile = mean of the chosen path vector and the roadmap's node vectors. */
-    fun studentVector(path: CareerPath?, roadmapNodes: List<SkillNode>): FloatArray? {
-        val vs = buildList {
-            path?.let { add(VectorMath.normalize(it.vector)) }
-            VectorMath.meanNormalized(roadmapNodes.map { it.vector })?.let { add(it) }
-        }
-        return VectorMath.meanNormalized(vs)
+    fun percent(model: MlModel, listingText: String, careerPath: String): Int? {
+        val idx = model.classifier.indexOf(careerPath)
+        if (idx < 0) return null
+        val p = model.classifier.predictProba(model.vectorizer.transform(listingText))[idx]
+        return (p * 100).toInt().coerceIn(0, 100)
     }
-
-    /** Cosine clamped to 0..100 for display. */
-    fun percent(student: FloatArray, listing: FloatArray): Int =
-        (VectorMath.cosine(student, listing).coerceIn(0f, 1f) * 100).toInt()
 }
